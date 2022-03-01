@@ -7,9 +7,10 @@
           <table class="table align-middle">
             <thead>
               <tr>
-                <th></th>
+                <th width='60'></th>
+                <th width='120'></th>
                 <th>品名</th>
-                <th style="width: 110px">數量</th>
+                <th width='120'>數量</th>
                 <th>單價</th>
               </tr>
             </thead>
@@ -26,6 +27,7 @@
                       <i class="bi bi-x"></i>
                     </button>
                   </td>
+                  <td><img :src="item.product.imageUrl" style="width: 100%"></td>
                   <td>
                     {{ item.product.title }}
                     <div class="text-success" v-if="item.coupon">
@@ -60,11 +62,11 @@
             </tbody>
             <tfoot>
               <tr>
-                <td colspan="3" class="text-end">總計</td>
+                <td colspan="4" class="text-end">總計</td>
                 <td class="text-end">{{ $filters.currency(cart.total) }}</td>
               </tr>
               <tr v-if="cart.final_total !== cart.total">
-                <td colspan="3" class="text-end text-success">折扣價</td>
+                <td colspan="4" class="text-end text-success">折扣價</td>
                 <td class="text-end text-success">
                   {{ $filters.currency(cart.final_total) }}
                 </td>
@@ -207,14 +209,11 @@ export default {
         this.isLoading = false
       })
     },
-    getProduct (id) {
-      this.$router.push(`/user/product/${id}`)
-    },
     getCart () {
       this.isLoading = true
       const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/cart`
       this.axios.get(api).then((res) => {
-        // console.log(res.data)
+        console.log(res.data)
         this.cart = { ...res.data.data }
         this.isLoading = false
       })
