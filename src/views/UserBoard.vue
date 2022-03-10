@@ -20,7 +20,7 @@
       </div> -->
       <button type="button" class="btn btn-link position-relative" @click="$router.push('/user/cart')">
         <i class="bi bi-cart-fill text-black" style="font-size:24px;"></i>
-        <span class="position-absolute translate-middle badge rounded-pill bg-danger" style="top:10px">{{$cartsTotal()}}</span>
+        <span class="position-absolute translate-middle badge rounded-pill bg-danger" style="top:10px">{{cartsNum}}</span>
       </button>
     </div>
   </nav>
@@ -41,6 +41,16 @@ export default {
     return {
       emitter
     }
+  },
+  data () {
+    return {
+      cartsNum: 0
+    }
+  },
+  created () {
+    emitter.on('getCartsNum', (num) => {
+      this.cartsNum = num
+    })
   }
 }
 </script>

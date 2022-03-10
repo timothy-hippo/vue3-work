@@ -213,9 +213,11 @@ export default {
       this.isLoading = true
       const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/cart`
       this.axios.get(api).then((res) => {
-        console.log(res.data)
+        // console.log(res.data)
         this.cart = { ...res.data.data }
         this.isLoading = false
+        const cartsNum = res.data.data.carts.length
+        this.emitter.emit('getCartsNum', cartsNum)
       })
     },
     removeCartItem (id) {

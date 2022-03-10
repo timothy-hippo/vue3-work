@@ -157,7 +157,8 @@
                       >{{ `$${item.origin_price}` }}</span
                     >
                   </p>
-                  <i class="bi bi-heart myheart" @click="addMyList(item.id)"></i>
+                  <i class="bi bi-heart myheart" v-if="isHeart(item.id) === -1" @click="addMyList(item.id)"></i>
+                  <i class="bi bi-heart-fill myheart" v-if="isHeart(item.id) !== -1" @click="addMyList(item.id)"></i>
                 </div>
                 <div class="btn-group btn-group-sm d-flex">
                   <button
@@ -206,12 +207,13 @@ export default {
       filterProducts: [],
       searchProduct: '',
       sortType: '',
-      myList: localStorage.getItem('myList') || []
+      myList: JSON.parse(localStorage.getItem('myList')) || []
     }
   },
   inject: ['emitter'],
   created () {
     this.getProducts()
+    this.getCart()
   },
   methods: {
     getProducts () {
@@ -267,6 +269,14 @@ export default {
           })
         }
       })
+      this.getCart()
+    },
+    getCart () {
+      const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/cart`
+      this.axios.get(api).then((res) => {
+        const cartsNum = res.data.data.carts.length
+        this.emitter.emit('getCartsNum', cartsNum)
+      })
     },
     sortProduct (type) {
       this.sortType = type
@@ -284,9 +294,17 @@ export default {
       }
     },
     addMyList (id) {
-      // this.myList.push(id)
-      const newMyList = JSON.parse(this.myList)
-      console.log(newMyList)
+      const index = this.myList.findIndex(item => item === id)
+      if (index === -1) {
+        this.myList.push(id)
+      } else {
+        this.myList.splice(index, 1)
+      }
+      localStorage.setItem('myList', JSON.stringify(this.myList))
+    },
+    isHeart (id) {
+      const index = this.myList.findIndex(item => item === id)
+      return index
     }
   },
   computed: {
